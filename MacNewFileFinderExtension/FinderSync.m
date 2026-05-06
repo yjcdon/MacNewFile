@@ -175,16 +175,41 @@
     return menu;
 }
 
-// Function to copy current directory path to clipboard
-- (void)copyPathToClipboard:(id)sender {
+// Helper method: determine target type and return the effective path
+// - File: returns full file path (including filename)
+// - Directory: returns directory path
+// - Folder background (empty area): returns current folder path
+- (NSString *)getEffectivePathForTarget {
     NSURL *targetURL = [[FIFinderSyncController defaultController] targetedURL];
 
     if (!targetURL) {
+        return nil;
+    }
+
+    NSString *path = targetURL.path;
+    NSFileManager *fm = [NSFileManager defaultManager];
+    BOOL isDirectory = NO;
+
+    // Check if path exists and determine if it's a directory
+    if ([fm fileExistsAtPath:path isDirectory:&isDirectory]) {
+        // File or directory - return the path directly
+        return path;
+    }
+
+    // Path doesn't exist - this might be a folder background
+    // Return the path anyway (it should be the current folder)
+    return path;
+}
+
+// Function to copy current directory path to clipboard
+- (void)copyPathToClipboard:(id)sender {
+    NSString *path = [self getEffectivePathForTarget];
+
+    if (!path) {
         NSLog(@"No target URL");
         return;
     }
 
-    NSString *path = targetURL.path;
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     [pasteboard clearContents];
     [pasteboard setString:path forType:NSPasteboardTypeString];
