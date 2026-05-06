@@ -109,61 +109,40 @@
     // Create submenu for New File options
     NSMenu *submenu = [[NSMenu alloc] initWithTitle:@""];
 
-    // Add "New Text File" to submenu
-    NSMenuItem *newTextItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Text File", nil) action:@selector(createNewTextFile:) keyEquivalent:@""];
+    // Add "Text" to submenu
+    NSMenuItem *newTextItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Text", nil) action:@selector(createNewTextFile:) keyEquivalent:@""];
     NSImage *textIcon = [NSImage imageNamed:@"edit"];
     textIcon.template = YES;
     newTextItem.image = textIcon;
     [submenu addItem:newTextItem];
 
-    // Add "New Markdown File" to submenu
-    NSMenuItem *newMarkdownItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Markdown File", nil) action:@selector(createNewMarkdownFile:) keyEquivalent:@""];
+    // Add "Markdown" to submenu
+    NSMenuItem *newMarkdownItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Markdown", nil) action:@selector(createNewMarkdownFile:) keyEquivalent:@""];
     NSImage *markdownIcon = [NSImage imageNamed:@"document"];
     markdownIcon.template = YES;
     newMarkdownItem.image = markdownIcon;
     [submenu addItem:newMarkdownItem];
 
-    // Add "New Microsoft Word Document" to submenu
-    NSMenuItem *newWordItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Microsoft Word Document", nil) action:@selector(createNewWordDocument:) keyEquivalent:@""];
+    // Add "Word" to submenu
+    NSMenuItem *newWordItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Word", nil) action:@selector(createNewWordDocument:) keyEquivalent:@""];
     NSImage *wordIcon = [NSImage imageNamed:@"word"];
     wordIcon.template = YES;
     newWordItem.image = wordIcon;
     [submenu addItem:newWordItem];
 
-    // Add "New Microsoft Excel Spreadsheet" to submenu
-    NSMenuItem *newExcelItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Microsoft Excel Spreadsheet", nil) action:@selector(createNewExcelDocument:) keyEquivalent:@""];
+    // Add "Excel" to submenu
+    NSMenuItem *newExcelItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Excel", nil) action:@selector(createNewExcelDocument:) keyEquivalent:@""];
     NSImage *excelIcon = [NSImage imageNamed:@"excel"];
     excelIcon.template = YES;
     newExcelItem.image = excelIcon;
     [submenu addItem:newExcelItem];
 
-    // Add "New Microsoft PowerPoint Presentation" to submenu
-    NSMenuItem *newPowerPointItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Microsoft PowerPoint Presentation", nil) action:@selector(createNewPowerPointDocument:) keyEquivalent:@""];
+    // Add "PPT" to submenu
+    NSMenuItem *newPowerPointItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"PPT", nil) action:@selector(createNewPowerPointDocument:) keyEquivalent:@""];
     NSImage *powerPointIcon = [NSImage imageNamed:@"powerpoint"];
     powerPointIcon.template = YES;
     newPowerPointItem.image = powerPointIcon;
     [submenu addItem:newPowerPointItem];
-
-    // Add "New Pages Document" to submenu
-    NSMenuItem *newPagesItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Pages Document", nil) action:@selector(createNewPagesDocument:) keyEquivalent:@""];
-    NSImage *pagesIcon = [NSImage imageNamed:@"pages"];
-    pagesIcon.template = YES;
-    newPagesItem.image = pagesIcon;
-    [submenu addItem:newPagesItem];
-
-    // Add "New Numbers Spreadsheet" to submenu
-    NSMenuItem *newNumbersItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Numbers Spreadsheet", nil) action:@selector(createNewNumbersDocument:) keyEquivalent:@""];
-    NSImage *numbersIcon = [NSImage imageNamed:@"numbers"];
-    numbersIcon.template = YES;
-    newNumbersItem.image = numbersIcon;
-    [submenu addItem:newNumbersItem];
-
-    // Add "New Keynote Presentation" to submenu
-    NSMenuItem *newKeynoteItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Keynote Presentation", nil) action:@selector(createNewKeynoteDocument:) keyEquivalent:@""];
-    NSImage *keynoteIcon = [NSImage imageNamed:@"keynote"];
-    keynoteIcon.template = YES;
-    newKeynoteItem.image = keynoteIcon;
-    [submenu addItem:newKeynoteItem];
 
     // Add "New File" submenu
     NSMenuItem *mainItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"New File", nil) action:nil keyEquivalent:@""];
@@ -400,162 +379,6 @@
 
     if (errorDict) {
         NSLog(@"Failed to create PowerPoint document: %@", errorDict);
-    } else {
-        NSLog(@"Created: %@", filePath);
-        NSURL *fileURL = [NSURL fileURLWithPath:filePath];
-        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[fileURL]];
-    }
-}
-
-// Function to create new Pages document
-- (void)createNewPagesDocument:(id)sender {
-    NSURL *targetURL = [[FIFinderSyncController defaultController] targetedURL];
-
-    if (!targetURL) {
-        NSLog(@"No target URL");
-        return;
-    }
-
-    // Build unique filename
-    NSString *baseName = NSLocalizedString(@"Untitled", nil);
-    NSString *extension = @"pages";
-    NSString *filePath = [targetURL.path stringByAppendingPathComponent:
-                          [NSString stringWithFormat:@"%@.%@", baseName, extension]];
-
-    NSFileManager *fm = [NSFileManager defaultManager];
-    int counter = 1;
-    while ([fm fileExistsAtPath:filePath]) {
-        NSString *fileName = [NSString stringWithFormat:@"%@ (%d).%@", baseName, counter, extension];
-        filePath = [targetURL.path stringByAppendingPathComponent:fileName];
-        counter++;
-    }
-
-    // Get the blank template from the bundle
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    NSString *templatePath = [bundle pathForResource:@"Blank" ofType:@"pages"];
-
-    if (!templatePath) {
-        NSLog(@"Failed to find Blank.pages template in bundle");
-        return;
-    }
-
-    // Copy template to destination using AppleScript (to bypass sandbox)
-    NSString *escapedTemplate = [templatePath stringByReplacingOccurrencesOfString:@"'" withString:@"'\\''"];
-    NSString *escapedDest = [filePath stringByReplacingOccurrencesOfString:@"'" withString:@"'\\''"];
-
-    NSString *scriptSource = [NSString stringWithFormat:
-        @"do shell script \"cp -R '%@' '%@'\"", escapedTemplate, escapedDest];
-
-    NSAppleScript *script = [[NSAppleScript alloc] initWithSource:scriptSource];
-    NSDictionary *errorDict = nil;
-    [script executeAndReturnError:&errorDict];
-
-    if (errorDict) {
-        NSLog(@"Failed to create Pages document: %@", errorDict);
-    } else {
-        NSLog(@"Created: %@", filePath);
-        NSURL *fileURL = [NSURL fileURLWithPath:filePath];
-        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[fileURL]];
-    }
-}
-
-// Function to create new Numbers document
-- (void)createNewNumbersDocument:(id)sender {
-    NSURL *targetURL = [[FIFinderSyncController defaultController] targetedURL];
-
-    if (!targetURL) {
-        NSLog(@"No target URL");
-        return;
-    }
-
-    // Build unique filename
-    NSString *baseName = NSLocalizedString(@"Untitled", nil);
-    NSString *extension = @"numbers";
-    NSString *filePath = [targetURL.path stringByAppendingPathComponent:
-                          [NSString stringWithFormat:@"%@.%@", baseName, extension]];
-
-    NSFileManager *fm = [NSFileManager defaultManager];
-    int counter = 1;
-    while ([fm fileExistsAtPath:filePath]) {
-        NSString *fileName = [NSString stringWithFormat:@"%@ (%d).%@", baseName, counter, extension];
-        filePath = [targetURL.path stringByAppendingPathComponent:fileName];
-        counter++;
-    }
-
-    // Get the blank template from the bundle
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    NSString *templatePath = [bundle pathForResource:@"Blank" ofType:@"numbers"];
-
-    if (!templatePath) {
-        NSLog(@"Failed to find Blank.numbers template in bundle");
-        return;
-    }
-
-    // Copy template to destination using AppleScript (to bypass sandbox)
-    NSString *escapedTemplate = [templatePath stringByReplacingOccurrencesOfString:@"'" withString:@"'\\''"];
-    NSString *escapedDest = [filePath stringByReplacingOccurrencesOfString:@"'" withString:@"'\\''"];
-
-    NSString *scriptSource = [NSString stringWithFormat:
-        @"do shell script \"cp -R '%@' '%@'\"", escapedTemplate, escapedDest];
-
-    NSAppleScript *script = [[NSAppleScript alloc] initWithSource:scriptSource];
-    NSDictionary *errorDict = nil;
-    [script executeAndReturnError:&errorDict];
-
-    if (errorDict) {
-        NSLog(@"Failed to create Numbers document: %@", errorDict);
-    } else {
-        NSLog(@"Created: %@", filePath);
-        NSURL *fileURL = [NSURL fileURLWithPath:filePath];
-        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[fileURL]];
-    }
-}
-
-// Function to create new Keynote document
-- (void)createNewKeynoteDocument:(id)sender {
-    NSURL *targetURL = [[FIFinderSyncController defaultController] targetedURL];
-
-    if (!targetURL) {
-        NSLog(@"No target URL");
-        return;
-    }
-
-    // Build unique filename
-    NSString *baseName = NSLocalizedString(@"Untitled", nil);
-    NSString *extension = @"key";
-    NSString *filePath = [targetURL.path stringByAppendingPathComponent:
-                          [NSString stringWithFormat:@"%@.%@", baseName, extension]];
-
-    NSFileManager *fm = [NSFileManager defaultManager];
-    int counter = 1;
-    while ([fm fileExistsAtPath:filePath]) {
-        NSString *fileName = [NSString stringWithFormat:@"%@ (%d).%@", baseName, counter, extension];
-        filePath = [targetURL.path stringByAppendingPathComponent:fileName];
-        counter++;
-    }
-
-    // Get the blank template from the bundle
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    NSString *templatePath = [bundle pathForResource:@"Blank" ofType:@"key"];
-
-    if (!templatePath) {
-        NSLog(@"Failed to find Blank.key template in bundle");
-        return;
-    }
-
-    // Copy template to destination using AppleScript (to bypass sandbox)
-    NSString *escapedTemplate = [templatePath stringByReplacingOccurrencesOfString:@"'" withString:@"'\\''"];
-    NSString *escapedDest = [filePath stringByReplacingOccurrencesOfString:@"'" withString:@"'\\''"];
-
-    NSString *scriptSource = [NSString stringWithFormat:
-        @"do shell script \"cp -R '%@' '%@'\"", escapedTemplate, escapedDest];
-
-    NSAppleScript *script = [[NSAppleScript alloc] initWithSource:scriptSource];
-    NSDictionary *errorDict = nil;
-    [script executeAndReturnError:&errorDict];
-
-    if (errorDict) {
-        NSLog(@"Failed to create Keynote document: %@", errorDict);
     } else {
         NSLog(@"Created: %@", filePath);
         NSURL *fileURL = [NSURL fileURLWithPath:filePath];

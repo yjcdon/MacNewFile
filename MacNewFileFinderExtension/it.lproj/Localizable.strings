@@ -1,31 +1,27 @@
-/* 
+/*
   Localizable.strings
   MacNewFile
 
   Created by Andrea Lombardo on 06/03/26.
-  
+
 */
 
 
 /* Toolbar */
-"MacNewFileFinderExtension: Click the toolbar item for a menu." = "Nuovo file: clicca qui per aprire il menu.";
+"MacNewFileFinderExtension: Click the toolbar item for a menu." = "New File: Click the toolbar item for a menu.";
 
 /* Menu Items */
-"Copy Path" = "Copia percorso";
-"Open New Terminal" = "Apri nel Terminale";
-"New File" = "Nuovo file";
-"Text File" = "File di testo";
-"Markdown File" = "File Markdown";
-"Microsoft Word Document" = "Documento Microsoft Word";
-"Microsoft Excel Spreadsheet" = "Foglio di calcolo Microsoft Excel";
-"Microsoft PowerPoint Presentation" = "Presentazione Microsoft PowerPoint";
-"Pages Document" = "Documento Pages";
-"Numbers Spreadsheet" = "Foglio di calcolo Numbers";
-"Keynote Presentation" = "Presentazione Keynote";
+"Copy Path" = "Copy Path";
+"Open New Terminal" = "Open New Terminal";
+"New File" = "New File";
+"Text" = "Text";
+"Markdown" = "Markdown";
+"Word" = "Word";
+"Excel" = "Excel";
+"PPT" = "PPT";
 
 /* File Names */
-"Untitled" = "Senza titolo";
-
+"Untitled" = "Untitled";
 
 /* Errors */
-"Failed to open Terminal" = "Impossibile aprire il Terminale";
+"Failed to open Terminal" = "Failed to open Terminal";

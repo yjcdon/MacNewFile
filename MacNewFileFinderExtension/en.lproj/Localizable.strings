@@ -1,9 +1,9 @@
-/* 
+/*
   Localizable.strings
   MacNewFile
 
   Created by Andrea Lombardo on 06/03/26.
-  
+
 */
 
 
@@ -14,14 +14,11 @@
 "Copy Path" = "Copy Path";
 "Open New Terminal" = "Open New Terminal";
 "New File" = "New File";
-"Text File" = "Text File";
-"Markdown File" = "Markdown File";
-"Microsoft Word Document" = "Microsoft Word Document";
-"Microsoft Excel Spreadsheet" = "Microsoft Excel Spreadsheet";
-"Microsoft PowerPoint Presentation" = "Microsoft PowerPoint Presentation";
-"Pages Document" = "Pages Document";
-"Numbers Spreadsheet" = "Numbers Spreadsheet";
-"Keynote Presentation" = "Keynote Presentation";
+"Text" = "Text";
+"Markdown" = "Markdown";
+"Word" = "Word";
+"Excel" = "Excel";
+"PPT" = "PPT";
 
 /* File Names */
 "Untitled" = "Untitled";
