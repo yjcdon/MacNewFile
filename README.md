@@ -3,131 +3,88 @@
 <img src="./MacNewFile/Assets.xcassets/AppIcon.appiconset/add (1) (1)-modified.png" width="100" height="100">
 
 # MacNewFile
-[![License](https://img.shields.io/github/license/GarfieldFluffJr/MacNewFile?color=007ec6)](https://github.com/GarfieldFluffJr/MacNewFile/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/yjcdon/MacNewFile?color=007ec6)](https://github.com/yjcdon/MacNewFile/blob/main/LICENSE)
 ![macOS](https://img.shields.io/badge/macOS-13.0+-A2AAAD)
-[![Homebrew](https://img.shields.io/badge/Homebrew-supported-F97316)](https://brew.sh/)
-[![Release](https://img.shields.io/github/v/release/GarfieldFluffJr/MacNewFile?color=2ea44f)](https://github.com/GarfieldFluffJr/MacNewFile/releases)
-
-![Project Views](https://hits.sh/github.com/GarfieldFluffJr/MacNewFile.svg?label=Project%20Views&color=007ec6)
-[![Stars](https://img.shields.io/github/stars/GarfieldFluffJr/MacNewFile?style=flat&color=FFD700)](https://github.com/GarfieldFluffJr/MacNewFile/stargazers)
 
 </div>
 
-One of the many things that pissed me off after switching from Windows to Mac was that I couldn't create a new text file or word document off of a right click in Finder (file explorer).
+从 Windows 切换到 Mac 后，最让人不爽的是无法在 Finder（文件管理器）右键创建新文件。
 
-So I made **MacNewFile**!!
+所以做了 **MacNewFile**！
 
-MacNewFile is lightweight and simple. You right click anywhere in Finder (or on your desktop) and you get a menu to create new files!
+轻量简洁，在 Finder 任意位置右键就能创建新文件。
 
-<div align="center">
-<img src="./assets/MacNewFile Demo sped up.gif" width="600" alt="MacNewFile Demo">
-</div>
+**注意**：不支持 iCloud 目录，因为 macOS Sonoma+ 移除了 FinderSync 对 iCloud 的支持。
 
-**Please note:** This only doesn't work on directories inside of your iCloud, since Apple fully removed support for FinderSync in 2019.
+## 功能
 
-## Features
-- Create files from Finder right-click menu:
-    - Text
-    - Markdown
-    - Word
-    - Excel
-    - PPT
+右键菜单创建文件：
+- Text（文本）
+- Markdown
+- Word
+- Excel
+- PPT
 
-- **Copy path** - right-click on file to copy its full path, on folder to copy folder path
+其他功能：
+- **复制路径** - 右键文件复制完整路径，右键文件夹复制目录路径
+- **打开终端** - 优先打开 Ghostty，未安装则打开 Terminal
 
-- **Open terminal** - opens Ghostty first, falls back to Terminal if not installed
+适配深色/浅色模式。
 
-- Light/dark mode compatible
+禁用应用：点击菜单栏的 MacNewFile 图标，选择"Quit"；或在 `系统设置 -> 通用 -> 登录项与扩展` 关闭。
 
-- To disable the app, click the MacNewFile icon in the menu bar and click "Quit"
-    - Or go to `System Settings -> General -> Login & Extensions -> File Providers / File System Extensions` and turn it off
+---
 
-# Installation
+# 安装（v3.2.0）
 
-- **[Manual Build [v3.2.0]](#manual-download)**
+本版本改动：
+- 移除 Pages、Numbers、Keynote 支持
+- 移除 Finder 工具栏按钮
+- 移除意大利语本地化
+- 简化菜单名称
 
-v3.2.0 includes all core functionality. Note that this fork removes some features from the original:
-- Removed Apple Pages, Numbers, and Keynote support
-- Removed Finder toolbar button
-- Removed Italian localization
-- Simplified menu item names
+新增功能：
+- **智能复制路径**：右键文件复制完整路径，右键文件夹复制目录路径
+- **Ghostty 支持**：优先打开 Ghostty，未安装回退到 Terminal
+- **模板方式创建**：Word/Excel/PPT 使用模板，兼容 WPS
 
-New features in v3.2.0:
-- **Smart copy path**: Copy file path when right-clicking on a file, directory path when on a folder
-- **Ghostty support**: Opens Ghostty terminal first, falls back to Terminal if not installed
-- **Template-based Office files**: Word, Excel, PPT files are created from templates for better compatibility with WPS
+## 手动构建
 
-## Manual Build
+1. 克隆本仓库
 
-### Install
+2. 用 Xcode 打开 `MacNewFile.xcodeproj`
 
-1. Clone this repository
+3. 在 Xcode 中配置签名：
+   - 选择 `MacNewFile` target，修改 `Team` 为你的 Apple ID
+   - 选择 `MacNewFileFinderExtension` target，修改 `Team` 为你的 Apple ID
 
-2. Open `MacNewFile.xcodeproj` in Xcode
+4. 构建项目：`Product -> Build` (Cmd+B)
 
-3. In Xcode, go to `Signing & Capabilities` for both targets:
-   - Select `MacNewFile` target
-   - Change `Team` to your Apple ID
-   - Select `MacNewFileFinderExtension` target
-   - Change `Team` to your Apple ID
+5. 将 `Products/MacNewFile.app` 移到 `/Applications`
 
-4. Build the project: `Product -> Build` (Cmd+B)
-
-5. Find the built app in `Products/MacNewFile.app`, move to `/Applications`
-
-6. Run: 
+6. 运行：
    ```bash
    xattr -cr /Applications/MacNewFile.app
    killall Finder
    open /Applications/MacNewFile.app
    ```
 
-### Uninstall
+## 卸载
 
-Delete `/Applications/MacNewFile.app`. Use `AppCleaner` to remove extension bundles.
+删除 `/Applications/MacNewFile.app`，可用 AppCleaner 清理扩展残留。
 
-- **[Jump to Debugging](#debugging)**
-- **[Jump to Contributions and Issues](#contributions-and-issues)**
+---
 
-## Debugging
-- Move app out of quarantine: `xattr -dr com.apple.quarantine /Applications/MacNewFile.app`
+## 调试
 
-- Restart Finder: `killall Finder`
+- 移除隔离属性：`xattr -cr /Applications/MacNewFile.app`
+- 重启 Finder：`killall Finder`
+- 检查系统设置的隐私与安全性
 
-- Go through Settings Privacy and Security
-
-## Contributions and Issues
-
-Do you have a new idea you want to implement? Feel free to contribute! 
-
-Fork the repository and make the project your own. Or, if you'd like to contribute to this project, submit a pull request when you're done. See **[CONTRIBUTING.md](./CONTRIBUTING.md)** for more details.
-
-Or if you'd like to **suggest changes**, **[submit a github issue](https://github.com/GarfieldFluffJr/MacNewFile/issues)**.
-
-You can also reach me by email if you have any questions: **louieyin6@gmail.com**
-
-## My Promise as a Developer
-
-- **I don't vibe-code my projects**
-
-- This is not malware, everything is pushed to this repo which you can review
-
-- It is **very easy to install and delete**, I steal no data, or hide anything on your device
-
-- This app does not hide in the background, I tested this with my own MacBook, Activity Monitor shows no activity once the application is quit
-
-    - You can view if it is running in `System Settings -> General -> Login Items & Extensions -> File Providers / File System Extensions`
-
-- I try to be as transparent as possible, and explain why certain security bypasses or unorthodox installation methods are necessary.
-
-- **My projects are fully Open Source**. I don't make my projects cost any money to my users. MacOS and Apple in general lacks an open source community and I hope to make it better. Despite Apple requiring almost every developer to pay $100 USD per year just to develop (which is outrageous), I will do whatever I can to keep developing and distributing for free and bypass these ridiculous Apple security requirements.
-
-## Support
-
-Thanks for making it this far in the readme. If you found this tool particularly useful for you, please consider giving me a star on github, it's free and means a lot to me.
-
-You can also choose to [Buy me a Coffee](https://buymeacoffee.com/garfieldfluffjr) if you really think I made a positive impact on you.
+---
 
 ## License
 
-GNU GPL v3 License - see [LICENSE](./LICENSE) for details.
+GNU GPL v3 License
+
+[English README](./README_EN.md)
