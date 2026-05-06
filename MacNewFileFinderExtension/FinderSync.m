@@ -229,7 +229,7 @@
     NSURL *targetURL = [[FIFinderSyncController defaultController] targetedURL];
 
     if (!targetURL) {
-        NSLog(@"No target URL");\
+        NSLog(@"No target URL");
         return;
     }
 
