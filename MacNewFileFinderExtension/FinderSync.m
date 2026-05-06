@@ -78,6 +78,9 @@
 #pragma mark - Menu item support
 
 - (NSMenu *)menuForMenuKind:(FIMenuKind)whichMenu {
+    // Store the menu kind for use in action methods
+    self.currentMenuKind = whichMenu;
+
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 
     // Add "Copy Path" menu item
@@ -143,29 +146,29 @@
 }
 
 // Helper method: determine target type and return the effective path
-// - File: returns full file path (including filename)
-// - Directory: returns directory path
-// - Folder background (empty area): returns current folder path
+// - Selected file(s): returns first selected file's path (including filename)
+// - Selected directory: returns first selected directory's path
+// - No selection (folder background): returns current folder path from targetedURL
 - (NSString *)getEffectivePathForTarget {
+    // For contextual menu on items, use selected items
+    if (self.currentMenuKind == FIMenuKindContextualMenuForItems) {
+        NSArray *selectedItems = [[FIFinderSyncController defaultController] selectedItemURLs];
+
+        if (selectedItems && [selectedItems count] > 0) {
+            NSURL *selectedURL = selectedItems[0];
+            return selectedURL.path;
+        }
+    }
+
+    // For other menu kinds (container, sidebar, toolbar) or no selection
+    // Use targetedURL
     NSURL *targetURL = [[FIFinderSyncController defaultController] targetedURL];
 
     if (!targetURL) {
         return nil;
     }
 
-    NSString *path = targetURL.path;
-    NSFileManager *fm = [NSFileManager defaultManager];
-    BOOL isDirectory = NO;
-
-    // Check if path exists and determine if it's a directory
-    if ([fm fileExistsAtPath:path isDirectory:&isDirectory]) {
-        // File or directory - return the path directly
-        return path;
-    }
-
-    // Path doesn't exist - this might be a folder background
-    // Return the path anyway (it should be the current folder)
-    return path;
+    return targetURL.path;
 }
 
 // Function to copy current directory path to clipboard

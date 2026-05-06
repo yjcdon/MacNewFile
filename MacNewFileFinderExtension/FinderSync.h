@@ -12,4 +12,7 @@
     dispatch_source_t _volumeTimerSource;
 }
 
+// Store the menu kind for later use in action methods
+@property (nonatomic) FIMenuKind currentMenuKind;
+
 @end
