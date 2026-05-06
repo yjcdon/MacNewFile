@@ -218,6 +218,7 @@
 }
 
 // Function to open Terminal at current directory
+// Priority: Ghostty > Terminal
 - (void)openTerminalAtPath:(id)sender {
     NSURL *targetURL = [[FIFinderSyncController defaultController] targetedURL];
 
@@ -229,17 +230,18 @@
     NSString *path = targetURL.path;
     NSString *escapedPath = [path stringByReplacingOccurrencesOfString:@"'" withString:@"'\\''"];
 
+    // Try Ghostty first, then fallback to Terminal
     NSString *scriptSource = [NSString stringWithFormat:
-        @"do shell script \"open -a Terminal '%@'\"", escapedPath];
+        @"do shell script \"open -a Ghostty '%@' || open -a Terminal '%@'\"", escapedPath, escapedPath];
 
     NSAppleScript *script = [[NSAppleScript alloc] initWithSource:scriptSource];
     NSDictionary *errorDict = nil;
     [script executeAndReturnError:&errorDict];
 
     if (errorDict) {
-        NSLog(@"Failed to open Terminal: %@", errorDict);
+        NSLog(@"Failed to open terminal: %@", errorDict);
     } else {
-        NSLog(@"Opened Terminal at: %@", path);
+        NSLog(@"Opened terminal at: %@", path);
     }
 }
 
