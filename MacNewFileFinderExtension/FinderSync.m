@@ -99,14 +99,14 @@
 
     // Add "Text" to submenu
     NSMenuItem *newTextItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Text", nil) action:@selector(createNewTextFile:) keyEquivalent:@""];
-    NSImage *textIcon = [NSImage imageNamed:@"edit"];
+    NSImage *textIcon = [NSImage imageNamed:@"document"];
     textIcon.template = YES;
     newTextItem.image = textIcon;
     [submenu addItem:newTextItem];
 
     // Add "Markdown" to submenu
     NSMenuItem *newMarkdownItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Markdown", nil) action:@selector(createNewMarkdownFile:) keyEquivalent:@""];
-    NSImage *markdownIcon = [NSImage imageNamed:@"document"];
+    NSImage *markdownIcon = [NSImage imageNamed:@"edit"];
     markdownIcon.template = YES;
     newMarkdownItem.image = markdownIcon;
     [submenu addItem:newMarkdownItem];
