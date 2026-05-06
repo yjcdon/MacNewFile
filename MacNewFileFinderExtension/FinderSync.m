@@ -75,19 +75,7 @@
     // Not used - no badge icons needed
 }
 
-#pragma mark - Menu and toolbar item support
-
-- (NSString *)toolbarItemName {
-    return NSLocalizedString(@"New File", nil);
-}
-
-- (NSString *)toolbarItemToolTip {
-    return NSLocalizedString(@"MacNewFileFinderExtension: Click the toolbar item for a menu.", nil);
-}
-
-- (NSImage *)toolbarItemImage {
-    return [NSImage imageNamed:NSImageNameAddTemplate];
-}
+#pragma mark - Menu item support
 
 - (NSMenu *)menuForMenuKind:(FIMenuKind)whichMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
