@@ -145,46 +145,46 @@
     return menu;
 }
 
-// Helper method: determine target type and return the effective path
-// - Selected file(s): returns first selected file's path (including filename)
-// - Selected directory: returns first selected directory's path
-// - No selection (folder background): returns current folder path from targetedURL
-- (NSString *)getEffectivePathForTarget {
-    // For contextual menu on items, use selected items
-    if (self.currentMenuKind == FIMenuKindContextualMenuForItems) {
-        NSArray *selectedItems = [[FIFinderSyncController defaultController] selectedItemURLs];
-
-        if (selectedItems && [selectedItems count] > 0) {
-            NSURL *selectedURL = selectedItems[0];
-            return selectedURL.path;
-        }
-    }
-
-    // For other menu kinds (container, sidebar, toolbar) or no selection
-    // Use targetedURL
-    NSURL *targetURL = [[FIFinderSyncController defaultController] targetedURL];
-
-    if (!targetURL) {
-        return nil;
-    }
-
-    return targetURL.path;
-}
-
-// Function to copy current directory path to clipboard
+/**
+ * Copies the selected Finder item paths or the current target path to the clipboard.
+ */
 - (void)copyPathToClipboard:(id)sender {
-    NSString *path = [self getEffectivePathForTarget];
+    FIFinderSyncController *controller = [FIFinderSyncController defaultController];
+    NSMutableArray<NSString *> *paths = [NSMutableArray array];
 
-    if (!path) {
-        NSLog(@"No target URL");
-        return;
+    // 1. Resolve selected items for item menus, otherwise use the current Finder target.
+    if (self.currentMenuKind == FIMenuKindContextualMenuForItems) {
+        NSArray<NSURL *> *selectedURLs = controller.selectedItemURLs;
+        if (selectedURLs.count == 0) {
+            NSLog(@"No selected item URLs available for Copy Path");
+            return;
+        }
+
+        for (NSURL *selectedURL in selectedURLs) {
+            if (selectedURL.path.length == 0) {
+                NSLog(@"Invalid selected item URL for Copy Path: %@", selectedURL);
+                return;
+            }
+            [paths addObject:selectedURL.path];
+        }
+    } else {
+        NSURL *targetURL = controller.targetedURL;
+        if (targetURL.path.length == 0) {
+            NSLog(@"No valid target URL available for Copy Path");
+            return;
+        }
+        [paths addObject:targetURL.path];
     }
 
+    // 2. Join multiple selected paths with one path per line.
+    NSString *clipboardText = [paths componentsJoinedByString:@"\n"];
+
+    // 3. Write the complete path text to the clipboard.
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     [pasteboard clearContents];
-    [pasteboard setString:path forType:NSPasteboardTypeString];
+    [pasteboard setString:clipboardText forType:NSPasteboardTypeString];
 
-    NSLog(@"Copied path to clipboard: %@", path);
+    NSLog(@"Copied path to clipboard: %@", clipboardText);
 }
 
 // Function to open Terminal at current directory

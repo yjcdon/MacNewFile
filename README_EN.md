@@ -33,7 +33,7 @@ MacNewFile is lightweight and simple. You right click anywhere in Finder (or on 
     - Excel
     - PPT
 
-- **Copy path** - right-click on file to copy its full path, on folder to copy folder path
+- **Copy path** - copy full file or folder paths, one path per line when multiple items are selected
 
 - **Open terminal** - opens Ghostty first, falls back to Terminal if not installed
 
@@ -53,7 +53,7 @@ v3.2.0 includes all core functionality. Note that this fork removes some feature
 - Simplified menu item names
 
 New features in v3.2.0:
-- **Smart copy path**: Copy file path when right-clicking on a file, directory path when on a folder
+- **Smart copy path**: Copy full file or folder paths, one path per line when multiple items are selected
 - **Ghostty support**: Opens Ghostty terminal first, falls back to Terminal if not installed
 - **Template-based Office files**: Word, Excel, PPT files are created from templates for better compatibility with WPS
 
